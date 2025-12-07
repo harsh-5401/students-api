@@ -7,35 +7,33 @@ import (
 	"strings"
 
 	"github.com/go-playground/validator/v10"
-	"golang.org/x/text/cases"
 )
 
 const (
-	StatusOK = "OK"
+	StatusOK    = "OK"
 	StatusError = "ERROR"
 )
 
-type Response struct{
+type Response struct {
 	Status string `json:"status"`
 	Error  string `json:"error"`
 }
 
-func WriteJson(w http.ResponseWriter , status int , data interface {}) error {
-	w.Header().Set("Content-Type" , "application/json")
+func WriteJson(w http.ResponseWriter, status int, data interface{}) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
 
 	return json.NewEncoder(w).Encode(data)
 }
 
-
 func GeneralError(err error) Response {
 	return Response{
 		Status: StatusError,
-		Error: err.Error(),
+		Error:  err.Error(),
 	}
 }
 
-func ValidationError(errs validator.ValidationErrors) Response{
+func ValidationError(errs validator.ValidationErrors) Response {
 	var errMsgs []string
 
 	for _, err := range errs {
@@ -49,6 +47,6 @@ func ValidationError(errs validator.ValidationErrors) Response{
 
 	return Response{
 		Status: StatusError,
-		Error:  strings.Join(errMsgs , ", "),
+		Error:  strings.Join(errMsgs, ", "),
 	}
 }
